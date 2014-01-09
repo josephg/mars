@@ -1,23 +1,40 @@
 doctype html
 title Mars
 h1 Mars!
+form(method='POST', action='/cheat')
+  button next turn (cheat)
 if message
   p= message
+
+p= 'Day ' + Math.floor(world.turn / 10) + ' (Turn ' + world.turn + ')'
+
+div#resources
+  p Resources:
+  div= world.resources.food + ' person days of food'
 
 - var player = world.players[playername];
 - var loc = locations[player.location](player);
 
-div#player
-  div= "You have " + player.actions + " actions remaining today"
+if player.dead
+  p You are dead
+else
+  div#player
+    p= "You have " + player.actions + " actions remaining"
+    if player.oxygen != null
+      div= "There are " + player.oxygen + " units of oxygen left in your tank."
 
-p#location= loc.desc()
+    if player.hungerText
+      div= player.hungerText
 
-- console.log('loc', loc);
-div#actions
-  if loc.actions
-    each action, name in loc.actions()
-      form(method='POST', action='/act')
-        input(type='hidden', name='player', value=playername)
-        button(name='act', value=name)
-          =action.text
+  p#location= loc.desc()
+
+  div#actions
+    if loc.actions
+      - var a = loc.actions()
+      if a
+        each action, name in a
+          form(method='POST', action='/act')
+            input(type='hidden', name='player', value=playername)
+            button(name='act', value=name)
+              =action.text
 
