@@ -1,0 +1,23 @@
+doctype html
+title Mars
+h1 Mars!
+if message
+  p= message
+
+- var player = world.players[playername];
+- var loc = locations[player.location](player);
+
+div#player
+  div= "You have " + player.actions + " actions remaining today"
+
+p#location= loc.desc()
+
+- console.log('loc', loc);
+div#actions
+  if loc.actions
+    each action, name in loc.actions()
+      form(method='POST', action='/act')
+        input(type='hidden', name='player', value=playername)
+        button(name='act', value=name)
+          =action.text
+
