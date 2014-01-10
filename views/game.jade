@@ -1,40 +1,50 @@
 doctype html
-title Mars
-h1 Mars!
-form(method='POST', action='/cheat')
-  button next turn (cheat)
-if message
-  p= message
-
-p= 'Day ' + Math.floor(world.turn / 10) + ' (Turn ' + world.turn + ')'
-
-div#resources
-  p Resources:
-  div= world.resources.food + ' person days of food'
+head
+  title Mars
+  link(rel='stylesheet', href='/style.css')
+h1.title Mars
 
 - var player = world.players[playername];
 - var loc = locations[player.location](player);
 
-if player.dead
-  p You are dead
-else
-  div#player
-    p= "You have " + player.actions + " actions remaining"
-    if player.oxygen != null
-      div= "There are " + player.oxygen + " units of oxygen left in your tank."
+div#sidebar
+  form(method='POST', action='/cheat')
+    button next turn (cheat)
 
-    if player.hungerText
-      div= player.hungerText
+  p= 'Day ' + Math.floor(world.turn / 10) + ' (Turn ' + world.turn + ')'
 
-  p#location= loc.desc()
+  div#statistics
+    h2 Vital Statistics
+    div
+      if player.dead
+        | You are dead.
+      else
+        div= "You have " + player.actions + " actions remaining"
+        if player.oxygen != null
+          div= "There are " + player.oxygen + " units of oxygen left in your tank."
 
-  div#actions
-    if loc.actions
-      - var a = loc.actions()
-      if a
-        each action, name in a
-          form(method='POST', action='/act')
-            input(type='hidden', name='player', value=playername)
-            button(name='act', value=name)
-              =action.text
+        if player.hungerText
+          div= player.hungerText
 
+  div#resources
+    h2 Resources
+    div= world.resources.food + ' person days of food'
+
+div#content
+  if message
+    div.message= message
+
+  if player.dead
+    p You are dead
+  else
+    div#location= loc.desc()
+
+    div#actions
+      if loc.actions
+        - var a = loc.actions()
+        if a
+          each action, name in a
+            form(method='POST', action='/act')
+              input(type='hidden', name='player', value=playername)
+              button(name='act', value=name)
+                =action.text

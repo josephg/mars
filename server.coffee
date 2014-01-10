@@ -3,7 +3,7 @@ express = require 'express'
 app = express()
   .use(express.json())
   .use(express.urlencoded())
-#  .use(express.static("#{__dirname}/"))
+  .use(express.static("#{__dirname}/static"))
 
 app.set 'views', "#{__dirname}/views"
 app.set 'view engine', 'jade'
